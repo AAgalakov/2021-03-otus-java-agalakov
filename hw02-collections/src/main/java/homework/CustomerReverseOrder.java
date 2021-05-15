@@ -5,13 +5,13 @@ import java.util.*;
 
 public class CustomerReverseOrder {
 
-    private final Deque<Customer> customerDeque = new LinkedList<>();
+    private final Deque<Customer> customerDeque = new ArrayDeque<>();
 
     public void add(Customer customer) {
-        customerDeque.add(customer);
+        customerDeque.push(customer);
     }
 
     public Customer take() {
-        return customerDeque.removeLast();
+        return customerDeque.pop();
     }
 }
