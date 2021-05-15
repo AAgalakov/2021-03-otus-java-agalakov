@@ -1,4 +1,4 @@
-package otus;
+package ru.otus;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
