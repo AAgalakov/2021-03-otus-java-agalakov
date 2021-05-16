@@ -9,3 +9,5 @@
 [Ссылка на второе задание - hw02-collections](hw02-collections/README.md "Ссылка на занятие №2")
 
 [Ссылка на третье задание - hw03-annotations](hw03-annotations/README.md "Ссылка на занятие №3")
+
+[Ссылка на четвёртое задание - hw04-gc](hw04-gc/README.md "Ссылка на занятие №4")
