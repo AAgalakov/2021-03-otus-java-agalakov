@@ -8,13 +8,34 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class ClassTest<T> {
+public class ClassTest {
 
-    public void doTest(Class<T> clazz) throws NoSuchMethodException {
-        List<Method> methodBeforeList = Arrays.stream(ClassForTest.class.getMethods())
+    private static final String BEFORE_TEST_ANNOTATION_NAME = Before.class.getSimpleName();
+    private static final String TEST_ANNOTATION_NAME = Test.class.getSimpleName();
+    private static final String AFTER_TEST_ANNOTATION_NAME = After.class.getSimpleName();
+    private static final String ERROR_MESSAGE = "Во время тестирования произошла ошибка";
+
+    public static void testClass(String className) throws ClassNotFoundException, NoSuchMethodException{
+        Class<?> clazz = Class.forName(className);
+        Constructor<?> constructor = clazz.getConstructor();
+
+        Map<String, List<Method>> methodForTest = getMethodForTest(clazz);
+
+        String resultOfTest = null;
+        try {
+             resultOfTest = testing(constructor, methodForTest);
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(Optional.ofNullable(resultOfTest).orElse(ERROR_MESSAGE));
+    }
+
+    private static Map<String, List<Method>> getMethodForTest(Class<?> clazz){
+        Method[] methods = clazz.getMethods();
+        List<Method> methodBeforeList = Arrays.stream(methods)
                 .filter(method -> method.isAnnotationPresent(Before.class))
                 .collect(Collectors.toList());
         List<Method> methodAfterList = Arrays.stream(ClassForTest.class.getMethods())
@@ -24,57 +45,57 @@ public class ClassTest<T> {
                 .filter(method -> method.isAnnotationPresent(Test.class))
                 .collect(Collectors.toList());
 
-        Constructor<T> constructor = clazz.getConstructor();
+        return Map.of(BEFORE_TEST_ANNOTATION_NAME, methodBeforeList,
+                TEST_ANNOTATION_NAME, methodTestList,
+                AFTER_TEST_ANNOTATION_NAME, methodAfterList);
+    }
 
-        AtomicInteger exceptions = new AtomicInteger();
-        AtomicInteger doneTests = new AtomicInteger();
-        Set<String> doneTest = new HashSet<>();
-        Set<String> failTests = new HashSet<>();
+    private static String testing(Constructor<?> constructor,
+                                Map<String, List<Method>> methodsMap) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        Set<String> success = new HashSet<>();
+        Set<String> failedTests = new HashSet<>();
+        List<Method> methodTestList = methodsMap.get(TEST_ANNOTATION_NAME);
+        for (Method value : methodTestList) {
+            Object newInstance = constructor.newInstance();
+            for (Method method : methodsMap.get(BEFORE_TEST_ANNOTATION_NAME)) {
+                method.invoke(newInstance);
+            }
+            try {
+                value.invoke(newInstance);
+            } catch (Exception e) {
+                failedTests.add(value.getName());
+            }
+            for (Method method : methodsMap.get(AFTER_TEST_ANNOTATION_NAME)) {
+                method.invoke(newInstance);
+            }
+            success.add(value.getName());
+        }
 
-        methodTestList.forEach(method -> {
-            T instance = null;
-            try {
-                instance = constructor.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
+        return printResults(methodTestList, success, failedTests);
+    }
+
+    private static String printResults(List<Method> methodTestList,
+                                     Set<String> doneTest,
+                                     Set<String> failTests) {
+        int countOfFailedTests = failTests.size();
+        int countOfSuccessTests = doneTest.size() - countOfFailedTests;
+        StringBuilder successTests = new StringBuilder();
+        for (String value : doneTest){
+            if (!failTests.contains(value)){
+                successTests.append(value);
+                successTests.append(" ");
             }
-            T finalMyClass = instance;
-            if (instance == null){
-                return;
-            }
-            methodBeforeList.forEach(method1 -> {
-                try {
-                    method1.invoke(finalMyClass);
-                    System.out.println(finalMyClass.hashCode());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            try {
-                method.invoke(instance);
-                System.out.println(finalMyClass.hashCode());
-                doneTests.getAndIncrement();
-            } catch (Exception e) {
-                exceptions.getAndIncrement();
-                Arrays.stream(e.getStackTrace()).forEach(System.out::println);
-                failTests.add(method.getAnnotation(Test.class).value());
-            }
-            T finalMyClass1 = instance;
-            methodAfterList.forEach(method1 -> {
-                try {
-                    method1.invoke(finalMyClass1);
-                    System.out.println(finalMyClass.hashCode());
-                    doneTest.add(method.getAnnotation(Test.class).value());
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            });
-            System.out.println();
-        });
-        System.out.println("Всего прошло тестов: " + methodTestList.size());
-        System.out.println("Прошли успешно: " + doneTests);
-        doneTest.stream().filter(s -> !failTests.contains(s)).forEach(System.out::println);
-        System.out.println("Не прошли: " + exceptions);
-        failTests.forEach(System.out::println);
+        }
+        StringBuilder failedTests = new StringBuilder();
+        for (String value : failTests){
+            failedTests.append(value);
+            failedTests.append(" ");
+        }
+
+        return String.format("Всего прошло тестов: %d. \n" +
+                "Прошло успешно: %d - %s \n" +
+                "Не прошло: %d - %s",
+                methodTestList.size(), countOfSuccessTests,
+                successTests.toString(), countOfFailedTests, failedTests);
     }
 }
