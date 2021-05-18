@@ -11,3 +11,5 @@
 [Ссылка на третье задание - hw03-annotations](hw03-annotations/README.md "Ссылка на занятие №3")
 
 [Ссылка на четвёртое задание - hw04-gc](hw04-gc/README.md "Ссылка на занятие №4")
+
+[Ссылка на пятое задание - hw05-byteCodes](hw05-byteCodes/README.md "Ссылка на занятие №5")
