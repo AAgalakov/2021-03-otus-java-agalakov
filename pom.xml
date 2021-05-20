@@ -19,6 +19,7 @@
     <modules>
         <module>hw01-maven</module>
         <module>hw02-collections</module>
+        <module>hw03-annotations</module>
     </modules>
 
     <dependencyManagement>
