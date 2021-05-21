@@ -4,6 +4,7 @@ import homework.annotations.After;
 import homework.annotations.Before;
 import homework.annotations.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,19 +36,10 @@ public class ClassTest {
 
     private static Map<String, List<Method>> getMethodForTest(Class<?> clazz){
         Method[] methods = clazz.getMethods();
-        List<Method> methodBeforeList = Arrays.stream(methods)
-                .filter(method -> method.isAnnotationPresent(Before.class))
-                .collect(Collectors.toList());
-        List<Method> methodAfterList = Arrays.stream(ClassForTest.class.getMethods())
-                .filter(method -> method.isAnnotationPresent(After.class))
-                .collect(Collectors.toList());
-        List<Method> methodTestList = Arrays.stream(ClassForTest.class.getMethods())
-                .filter(method -> method.isAnnotationPresent(Test.class))
-                .collect(Collectors.toList());
 
-        return Map.of(BEFORE_TEST_ANNOTATION_NAME, methodBeforeList,
-                TEST_ANNOTATION_NAME, methodTestList,
-                AFTER_TEST_ANNOTATION_NAME, methodAfterList);
+        return Map.of(BEFORE_TEST_ANNOTATION_NAME, getMethodList(methods, Before.class),
+                TEST_ANNOTATION_NAME, getMethodList(methods, Test.class),
+                AFTER_TEST_ANNOTATION_NAME, getMethodList(methods, After.class));
     }
 
     private static String testing(Constructor<?> constructor,
@@ -97,5 +89,11 @@ public class ClassTest {
                 "Не прошло: %d - %s",
                 methodTestList.size(), countOfSuccessTests,
                 successTests.toString(), countOfFailedTests, failedTests);
+    }
+
+    private static List<Method> getMethodList(Method[] methods, Class<? extends Annotation> clazz) {
+        return Arrays.stream(methods)
+                .filter(method -> method.isAnnotationPresent(clazz))
+                .collect(Collectors.toList());
     }
 }
