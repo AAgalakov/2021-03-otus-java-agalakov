@@ -1,23 +1,17 @@
 package homework;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Homework {
     public static void main(String[] args) {
-        List<Integer> integerList = new ArrayList<>();
+        List<Object[]> integerList = new LinkedList<>();
 
-        while (true) {
-            integerList.addAll(getCollection());
-            integerList = new ArrayList<>(integerList);
+        for (int j = 1; j > 0; j++) {
+            integerList.add(new Object[100]);
+            if ((j % 2) == 0) {
+                integerList.remove(0);
+            }
         }
-    }
-
-    private static List<Integer> getCollection() {
-        ArrayList<Integer> integers = new ArrayList<>();
-        for (int i = 0; i < 10_000; i++) {
-            integers.add(i);
-        }
-        return integers;
     }
 }
