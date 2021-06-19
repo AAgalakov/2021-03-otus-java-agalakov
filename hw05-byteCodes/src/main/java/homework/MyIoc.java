@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MyIoc {
 
@@ -13,7 +15,7 @@ public class MyIoc {
     private MyIoc() {
     }
 
-    static Logging createMyClass() {
+    static Logging createMyClass() throws ClassNotFoundException {
         InvocationHandler handler = new DemoInvocationHandler(new LoggingImpl());
         return (Logging) Proxy.newProxyInstance(MyIoc.class.getClassLoader(),
                 new Class<?>[]{Logging.class}, handler);
@@ -21,36 +23,38 @@ public class MyIoc {
 
     static class DemoInvocationHandler implements InvocationHandler {
         private final Logging myClass;
+        private final Set<String> methodsNamesSet;
+        {
+            ClassLoader platformClassLoader = ClassLoader.getSystemClassLoader();
+            Method[] methods = platformClassLoader.loadClass(NAME_OF_CLASS).getMethods();
+            methodsNamesSet = Arrays.stream(methods)
+                    .filter(method -> method.isAnnotationPresent(ANNOTATION))
+                    .map(Method::getName)
+                    .collect(Collectors.toSet());
+        }
 
-        DemoInvocationHandler(Logging myClass) {
+        DemoInvocationHandler(Logging myClass) throws ClassNotFoundException {
             this.myClass = myClass;
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            ClassLoader platformClassLoader = ClassLoader.getSystemClassLoader();
-            Method[] methods = platformClassLoader.loadClass(NAME_OF_CLASS).getMethods();
-            for (Method classMethod : methods) {
-                if (classMethod.getName().equals(method.getName())) {
-                    method = classMethod;
-                    break;
-                }
-            }
-            if (method.isAnnotationPresent(ANNOTATION)) {
-                printLog(method, args);
+            String methodName = method.getName();
+            if (methodsNamesSet.contains(methodName)){
+                printLog(methodName, args);
             }
             return method.invoke(myClass, args);
         }
 
-        private void printLog(Method method, Object[] args) {
+        private void printLog(String methodName, Object[] args) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("executed method: ")
-                    .append(method.getName())
-                    .append(", ")
+            stringBuilder.append("executed methodName: ")
+                    .append(methodName)
+                    .append(";\n")
                     .append("param: ");
             for (int i = 0; i < args.length; i++) {
                 stringBuilder.append(args[i]);
-                if (i < args.length - 1) {
+                if (i != args.length - 1) {
                     stringBuilder.append(", ");
                 }
             }
