@@ -4,7 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MyIoc {
@@ -24,6 +25,7 @@ public class MyIoc {
     static class DemoInvocationHandler implements InvocationHandler {
         private final Logging myClass;
         private final Set<String> methodsNamesSet;
+
         {
             ClassLoader platformClassLoader = ClassLoader.getSystemClassLoader();
             Method[] methods = platformClassLoader.loadClass(NAME_OF_CLASS).getMethods();
@@ -40,7 +42,7 @@ public class MyIoc {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             String methodName = method.getName();
-            if (methodsNamesSet.contains(methodName)){
+            if (methodsNamesSet.contains(methodName)) {
                 printLog(methodName, args);
             }
             return method.invoke(myClass, args);
