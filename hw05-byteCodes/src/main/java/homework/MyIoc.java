@@ -26,16 +26,13 @@ public class MyIoc {
         private final Logging myClass;
         private final Set<String> methodsNamesSet;
 
-        {
+        DemoInvocationHandler(Logging myClass) throws ClassNotFoundException {
             ClassLoader platformClassLoader = ClassLoader.getSystemClassLoader();
             Method[] methods = platformClassLoader.loadClass(NAME_OF_CLASS).getMethods();
             methodsNamesSet = Arrays.stream(methods)
                     .filter(method -> method.isAnnotationPresent(ANNOTATION))
                     .map(Method::getName)
                     .collect(Collectors.toSet());
-        }
-
-        DemoInvocationHandler(Logging myClass) throws ClassNotFoundException {
             this.myClass = myClass;
         }
 
