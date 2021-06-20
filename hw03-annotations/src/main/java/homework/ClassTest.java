@@ -88,7 +88,7 @@ public class ClassTest {
                 "Прошло успешно: %d - %s \n" +
                 "Не прошло: %d - %s",
                 methodTestList.size(), countOfSuccessTests,
-                successTests.toString(), countOfFailedTests, failedTests);
+                successTests, countOfFailedTests, failedTests);
     }
 
     private static List<Method> getMethodList(Method[] methods, Class<? extends Annotation> clazz) {
