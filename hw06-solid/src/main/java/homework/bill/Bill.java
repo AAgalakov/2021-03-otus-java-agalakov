@@ -1,4 +1,4 @@
-package homework.atm;
+package homework.bill;
 
 public enum Bill {
     ONE_THOUSAND(1000),

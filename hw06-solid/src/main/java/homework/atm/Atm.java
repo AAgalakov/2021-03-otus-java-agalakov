@@ -1,14 +1,19 @@
 package homework.atm;
 
+import homework.bill.Bill;
+import homework.bill.Tape;
+import homework.bill.CountOfBills;
+import homework.validate.Valid;
+
 import java.util.List;
 import java.util.Queue;
 
 public class Atm {
 
-    private final TapeOfBills tapeOfBills;
-    private final Validator validator;
+    private final Tape tapeOfBills;
+    private final Valid validator;
 
-    public Atm(TapeOfBills tapeOfBills, Validator validator) {
+    public Atm(Tape tapeOfBills, Valid validator) {
         this.tapeOfBills = tapeOfBills;
         this.validator = validator;
     }
@@ -19,9 +24,8 @@ public class Atm {
     }
 
     public List<Bill> pullMoney(int amountRequestOfMoney) {
-        RequestOfMoney requestOfMoney = new RequestOfMoney(amountRequestOfMoney);
-        validator.validate(tapeOfBills, requestOfMoney);
-        List<Bill> billList = tapeOfBills.takeBills(requestOfMoney);
+        CountOfBills countOfBills = validator.validate(tapeOfBills, amountRequestOfMoney);
+        List<Bill> billList = tapeOfBills.takeBills(countOfBills);
         printCurrentAmount();
         return billList;
     }

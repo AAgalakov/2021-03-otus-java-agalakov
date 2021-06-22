@@ -1,8 +1,8 @@
-package homework.atm;
+package homework.bill;
 
 import java.util.*;
 
-public class TapeOfBills {
+public class TapeOfBills implements Tape {
 
     private final Map<Bill, Queue<Bill>> tapeOfBills;
 
@@ -18,6 +18,7 @@ public class TapeOfBills {
         }
     }
 
+    @Override
     public int getCurrentAmountOfMoney() {
         int currentAmount = 0;
         Set<Map.Entry<Bill, Queue<Bill>>> entries = tapeOfBills.entrySet();
@@ -28,13 +29,15 @@ public class TapeOfBills {
         return currentAmount;
     }
 
+    @Override
     public void putBills(Queue<Bill> billList) {
         billList.forEach(bill -> tapeOfBills.get(bill).add(bill));
     }
 
-    public List<Bill> takeBills(RequestOfMoney requestOfMoney) {
+    @Override
+    public List<Bill> takeBills(CountOfBills countOfBills) {
         LinkedList<Bill> billsToOutput = new LinkedList<>();
-        Map<Bill, Integer> collectionOfMoney = requestOfMoney.getBillCountOfBillMap();
+        Map<Bill, Integer> collectionOfMoney = countOfBills.getBillCountOfBillMap();
         for (Map.Entry<Bill, Integer> billIntegerEntry : collectionOfMoney.entrySet()) {
             for (int i = 0; i < billIntegerEntry.getValue(); i++) {
                 Queue<Bill> atmBillList = tapeOfBills.get(billIntegerEntry.getKey());
@@ -45,10 +48,12 @@ public class TapeOfBills {
         return billsToOutput;
     }
 
+    @Override
     public int giveCountOfBills(Bill bill) {
         return tapeOfBills.get(bill).size();
     }
 
+    @Override
     public int giveMinAvailableSum() {
         return tapeOfBills.entrySet()
                 .stream()
