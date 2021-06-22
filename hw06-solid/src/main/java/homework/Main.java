@@ -1,11 +1,13 @@
 package homework;
 
-import homework.atm.*;
-import homework.bill.Bill;
-import homework.bill.Tape;
-import homework.bill.TapeOfBills;
-import homework.validate.Valid;
-import homework.validate.Validator;
+import homework.atm.Atm;
+import homework.atm.Bill;
+import homework.atm.tape.TapeOfBills;
+import homework.atm.tape.TapeOfBillsOfBillsImpl;
+import homework.atm.service.TapeOfBillsService;
+import homework.atm.service.TapeOfBillsServiceImpl;
+import homework.atm.validation.Validator;
+import homework.atm.validation.ValidatorImpl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,15 +16,18 @@ import java.util.Queue;
 public class Main {
     public static void main(String[] args) {
         Queue<Bill> generateBills = generateBills(3);
-        Tape tape = new TapeOfBills();
-        Valid valid = new Validator();
-        Atm atm = new Atm(tape, valid);
+        TapeOfBills tapeOfBills = new TapeOfBillsOfBillsImpl();
+        TapeOfBillsService tapeOfBillsService = new TapeOfBillsServiceImpl(tapeOfBills);
+        Validator validator = new ValidatorImpl();
+        Atm atm = new Atm(validator, tapeOfBillsService);
         atm.printCurrentAmount();
         atm.pushMoney(generateBills);
-        int amount = 2300;
+        atm.printCurrentAmount();
+        int amount = 100;
         System.out.println("Запрошенная сумма: " + amount);
         List<Bill> giveMoney = atm.pullMoney(amount);
         System.out.println("Количество выданных купюр: " + giveMoney.size());
+        atm.printCurrentAmount();
     }
 
     private static Queue<Bill> generateBills(int countOfBill) {

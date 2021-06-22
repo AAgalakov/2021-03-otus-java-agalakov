@@ -1,4 +1,4 @@
-package homework.bill;
+package homework.atm;
 
 public enum Bill {
     ONE_THOUSAND(1000),
@@ -12,7 +12,7 @@ public enum Bill {
         this.denomination = denomination;
     }
 
-    public static int getDenomination(Bill bill) {
-        return bill.denomination;
+    public int getDenomination() {
+        return this.denomination;
     }
 }

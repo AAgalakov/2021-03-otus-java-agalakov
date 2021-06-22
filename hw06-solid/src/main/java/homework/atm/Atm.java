@@ -1,36 +1,33 @@
 package homework.atm;
 
-import homework.bill.Bill;
-import homework.bill.Tape;
-import homework.bill.CountOfBills;
-import homework.validate.Valid;
+import homework.atm.service.CountOfBills;
+import homework.atm.service.TapeOfBillsService;
+import homework.atm.validation.Validator;
 
 import java.util.List;
 import java.util.Queue;
 
 public class Atm {
 
-    private final Tape tapeOfBills;
-    private final Valid validator;
+    private final Validator validator;
+    private final TapeOfBillsService tapeOfBillsService;
 
-    public Atm(Tape tapeOfBills, Valid validator) {
-        this.tapeOfBills = tapeOfBills;
+    public Atm(Validator validator, TapeOfBillsService tapeOfBillsService) {
         this.validator = validator;
+        this.tapeOfBillsService = tapeOfBillsService;
     }
 
     public void pushMoney(Queue<Bill> billList) {
-        tapeOfBills.putBills(billList);
-        printCurrentAmount();
+        System.out.printf("Внесено: %d\n", tapeOfBillsService.putBills(billList));
     }
 
     public List<Bill> pullMoney(int amountRequestOfMoney) {
-        CountOfBills countOfBills = validator.validate(tapeOfBills, amountRequestOfMoney);
-        List<Bill> billList = tapeOfBills.takeBills(countOfBills);
-        printCurrentAmount();
-        return billList;
+        CountOfBills countOfBills = tapeOfBillsService.convertRequiredAmountToCountOfBill(amountRequestOfMoney);
+        validator.validate(amountRequestOfMoney, tapeOfBillsService, countOfBills);
+        return tapeOfBillsService.takeBills(countOfBills);
     }
 
     public void printCurrentAmount() {
-        System.out.println("Текущий остаток денежных средств: " + tapeOfBills.getCurrentAmountOfMoney());
+        System.out.println("Текущий остаток денежных средств: " + tapeOfBillsService.getCurrentAmountOfAtm());
     }
 }

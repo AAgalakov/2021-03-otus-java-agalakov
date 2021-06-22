@@ -1,37 +1,39 @@
-package homework.bill;
+package homework.atm.tape;
+
+import homework.atm.Bill;
+import homework.atm.service.CountOfBills;
 
 import java.util.*;
 
-public class TapeOfBills implements Tape {
+public class TapeOfBillsOfBillsImpl implements TapeOfBills {
 
-    private final Map<Bill, Queue<Bill>> tapeOfBills;
+    private final Map<Bill, Queue<Bill>> billListMap;
 
     {
-        tapeOfBills = new HashMap<>();
+        billListMap = new HashMap<>();
         Bill[] values = Bill.values();
         for (Bill bill : values) {
             Queue<Bill> billList = new LinkedList<>();
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 5; i++) {
                 billList.add(bill);
             }
-            tapeOfBills.put(bill, billList);
+            billListMap.put(bill, billList);
         }
     }
 
     @Override
-    public int getCurrentAmountOfMoney() {
-        int currentAmount = 0;
-        Set<Map.Entry<Bill, Queue<Bill>>> entries = tapeOfBills.entrySet();
-        for (Map.Entry<Bill, Queue<Bill>> billListEntry : entries) {
-            currentAmount += Bill.getDenomination(billListEntry.getKey()) * billListEntry.getValue().size();
-        }
-
-        return currentAmount;
+    public Map<Bill, Queue<Bill>> getMap() {
+        return Map.copyOf(billListMap);
     }
 
     @Override
-    public void putBills(Queue<Bill> billList) {
-        billList.forEach(bill -> tapeOfBills.get(bill).add(bill));
+    public int putBills(Queue<Bill> billList) {
+        return billList.stream()
+                .map(bill -> {
+                    billListMap.get(bill).add(bill);
+                    return bill.getDenomination();
+                })
+                .reduce(0, Integer::sum);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class TapeOfBills implements Tape {
         Map<Bill, Integer> collectionOfMoney = countOfBills.getBillCountOfBillMap();
         for (Map.Entry<Bill, Integer> billIntegerEntry : collectionOfMoney.entrySet()) {
             for (int i = 0; i < billIntegerEntry.getValue(); i++) {
-                Queue<Bill> atmBillList = tapeOfBills.get(billIntegerEntry.getKey());
+                Queue<Bill> atmBillList = billListMap.get(billIntegerEntry.getKey());
                 transferBillFromAtmToOutput(atmBillList, billsToOutput);
             }
         }
@@ -50,15 +52,15 @@ public class TapeOfBills implements Tape {
 
     @Override
     public int giveCountOfBills(Bill bill) {
-        return tapeOfBills.get(bill).size();
+        return billListMap.get(bill).size();
     }
 
     @Override
     public int giveMinAvailableSum() {
-        return tapeOfBills.entrySet()
+        return billListMap.entrySet()
                 .stream()
                 .filter(billListEntry -> billListEntry.getValue().size() > 0)
-                .map(billListEntry -> Bill.getDenomination(billListEntry.getKey()))
+                .map(billListEntry -> billListEntry.getKey().getDenomination())
                 .min(Integer::compareTo)
                 .orElseThrow(() -> new IllegalStateException("Кассетница пуста"));
     }

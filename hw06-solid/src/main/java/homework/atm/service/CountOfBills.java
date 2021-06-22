@@ -1,4 +1,6 @@
-package homework.bill;
+package homework.atm.service;
+
+import homework.atm.Bill;
 
 import java.util.HashMap;
 import java.util.Map;
