@@ -5,7 +5,7 @@ import homework.atm.service.CountOfBills;
 
 import java.util.*;
 
-public class TapeOfBillsOfBillsImpl implements TapeOfBills {
+public class BillsListImpl implements BillsList {
 
     private final Map<Bill, Queue<Bill>> billListMap;
 

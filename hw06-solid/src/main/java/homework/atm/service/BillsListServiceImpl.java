@@ -1,32 +1,32 @@
 package homework.atm.service;
 
 import homework.atm.Bill;
-import homework.atm.tape.TapeOfBills;
+import homework.atm.tape.BillsList;
 
 import java.util.List;
 import java.util.Queue;
 
-public class TapeOfBillsServiceImpl implements TapeOfBillsService {
+public class BillsListServiceImpl implements BillsListService {
 
-    private final TapeOfBills tapeOfBills;
+    private final BillsList billsList;
 
-    public TapeOfBillsServiceImpl(TapeOfBills tapeOfBills) {
-        this.tapeOfBills = tapeOfBills;
+    public BillsListServiceImpl(BillsList billsList) {
+        this.billsList = billsList;
     }
 
     @Override
     public int putBills(Queue<Bill> billList) {
-        return tapeOfBills.putBills(billList);
+        return billsList.putBills(billList);
     }
 
     @Override
     public int giveMinAvailableSum() {
-        return tapeOfBills.giveMinAvailableSum();
+        return billsList.giveMinAvailableSum();
     }
 
     @Override
     public int getCurrentAmountOfAtm() {
-        return tapeOfBills.getMap().entrySet().stream()
+        return billsList.getMap().entrySet().stream()
                 .map(billQueueEntry -> billQueueEntry.getKey().getDenomination() * billQueueEntry.getValue().size())
                 .reduce(0, Integer::sum);
     }
@@ -38,7 +38,7 @@ public class TapeOfBillsServiceImpl implements TapeOfBillsService {
         for (Bill bill : bills) {
             int denomination = bill.getDenomination();
             int requestCountOfBill = requestedAmountOfMoney / denomination;
-            int currentCountOfBill = tapeOfBills.giveCountOfBills(bill);
+            int currentCountOfBill = billsList.giveCountOfBills(bill);
             if (requestCountOfBill > currentCountOfBill) {
                 countOfBills.addCountOfBill(bill, currentCountOfBill);
                 requestedAmountOfMoney -= denomination * currentCountOfBill;
@@ -56,6 +56,6 @@ public class TapeOfBillsServiceImpl implements TapeOfBillsService {
 
     @Override
     public List<Bill> takeBills(CountOfBills countOfBills) {
-        return tapeOfBills.takeBills(countOfBills);
+        return billsList.takeBills(countOfBills);
     }
 }

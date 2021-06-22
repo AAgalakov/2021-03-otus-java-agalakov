@@ -5,7 +5,7 @@ import homework.atm.Bill;
 import java.util.List;
 import java.util.Queue;
 
-public interface TapeOfBillsService {
+public interface BillsListService {
 
     CountOfBills convertRequiredAmountToCountOfBill(int requiredAmount);
 

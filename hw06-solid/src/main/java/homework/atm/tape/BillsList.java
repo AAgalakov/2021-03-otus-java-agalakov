@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public interface TapeOfBills {
+public interface BillsList {
 
     int putBills(Queue<Bill> billList);
 

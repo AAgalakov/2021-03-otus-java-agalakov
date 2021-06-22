@@ -1,7 +1,7 @@
 package homework.atm.validation;
 
 import homework.atm.service.CountOfBills;
-import homework.atm.service.TapeOfBillsService;
+import homework.atm.service.BillsListService;
 
 public class ValidatorImpl implements Validator {
 
@@ -12,9 +12,9 @@ public class ValidatorImpl implements Validator {
             " суммы в %d. Имеется только: %d";
 
     @Override
-    public void validate(int requestedAmountOfMoney, TapeOfBillsService tapeOfBillsService, CountOfBills countOfBills) {
-        int minAvailableSum = tapeOfBillsService.giveMinAvailableSum();
-        int currentAmountOfMoney = tapeOfBillsService.getCurrentAmountOfAtm();
+    public void validate(int requestedAmountOfMoney, BillsListService billsListService, CountOfBills countOfBills) {
+        int minAvailableSum = billsListService.giveMinAvailableSum();
+        int currentAmountOfMoney = billsListService.getCurrentAmountOfAtm();
         minAvailableSumCheck(requestedAmountOfMoney, minAvailableSum);
         requestOfMoneyIsInMinSumCheck(requestedAmountOfMoney, minAvailableSum);
         haveEnoughMoneyCheck(requestedAmountOfMoney, currentAmountOfMoney);
