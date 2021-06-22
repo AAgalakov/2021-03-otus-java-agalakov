@@ -1,39 +1,43 @@
 package homework.atm;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class TapeOfBills {
 
-    private final Map<Bill, List<Bill>> tapeOfBills;
+    private final Map<Bill, Queue<Bill>> tapeOfBills;
 
     {
+        tapeOfBills = new HashMap<>();
         Bill[] values = Bill.values();
-        tapeOfBills = Arrays.stream(values).collect(Collectors.toMap(Function.identity(), bill -> new LinkedList<>()));
+        for (Bill bill : values) {
+            Queue<Bill> billList = new LinkedList<>();
+            for (int i = 0; i < 10; i++) {
+                billList.add(bill);
+            }
+            tapeOfBills.put(bill, billList);
+        }
     }
 
     public int getCurrentAmountOfMoney() {
         int currentAmount = 0;
-        Set<Map.Entry<Bill, List<Bill>>> entries = tapeOfBills.entrySet();
-        for (Map.Entry<Bill, List<Bill>> billListEntry : entries) {
+        Set<Map.Entry<Bill, Queue<Bill>>> entries = tapeOfBills.entrySet();
+        for (Map.Entry<Bill, Queue<Bill>> billListEntry : entries) {
             currentAmount += Bill.getDenomination(billListEntry.getKey()) * billListEntry.getValue().size();
         }
 
         return currentAmount;
     }
 
-    public void putBills(List<Bill> billList) {
+    public void putBills(Queue<Bill> billList) {
         billList.forEach(bill -> tapeOfBills.get(bill).add(bill));
     }
 
     public List<Bill> takeBills(RequestOfMoney requestOfMoney) {
         LinkedList<Bill> billsToOutput = new LinkedList<>();
         Map<Bill, Integer> collectionOfMoney = requestOfMoney.getBillCountOfBillMap();
-
         for (Map.Entry<Bill, Integer> billIntegerEntry : collectionOfMoney.entrySet()) {
             for (int i = 0; i < billIntegerEntry.getValue(); i++) {
-                List<Bill> atmBillList = tapeOfBills.get(billIntegerEntry.getKey());
+                Queue<Bill> atmBillList = tapeOfBills.get(billIntegerEntry.getKey());
                 transferBillFromAtmToOutput(atmBillList, billsToOutput);
             }
         }
@@ -54,9 +58,8 @@ public class TapeOfBills {
                 .orElseThrow(() -> new IllegalStateException("Кассетница пуста"));
     }
 
-    private void transferBillFromAtmToOutput(List<Bill> atmBillList, List<Bill> outputBillList) {
-        Bill bill = atmBillList.get(0);
-        atmBillList.remove(bill);
+    private void transferBillFromAtmToOutput(Queue<Bill> atmBillList, Queue<Bill> outputBillList) {
+        Bill bill = atmBillList.remove();
         outputBillList.add(bill);
     }
 }

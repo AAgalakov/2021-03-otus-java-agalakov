@@ -1,19 +1,26 @@
 package homework.atm;
 
 import java.util.List;
+import java.util.Queue;
 
 public class Atm {
 
-    private final TapeOfBills tapeOfBills = new TapeOfBills();
+    private final TapeOfBills tapeOfBills;
+    private final Validator validator;
 
-    public void takeMoney(List<Bill> billList) {
+    public Atm(TapeOfBills tapeOfBills, Validator validator) {
+        this.tapeOfBills = tapeOfBills;
+        this.validator = validator;
+    }
+
+    public void pushMoney(Queue<Bill> billList) {
         tapeOfBills.putBills(billList);
         printCurrentAmount();
     }
 
-    public List<Bill> takeRequest(int amountRequestOfMoney) {
+    public List<Bill> pullMoney(int amountRequestOfMoney) {
         RequestOfMoney requestOfMoney = new RequestOfMoney(amountRequestOfMoney);
-        new Validation(tapeOfBills, requestOfMoney).validate();
+        validator.validate(tapeOfBills, requestOfMoney);
         List<Bill> billList = tapeOfBills.takeBills(requestOfMoney);
         printCurrentAmount();
         return billList;
