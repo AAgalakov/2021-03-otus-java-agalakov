@@ -4,6 +4,7 @@ import homework.atm.Bill;
 import homework.atm.service.CountOfBills;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BillsListImpl implements BillsList {
 
@@ -22,8 +23,9 @@ public class BillsListImpl implements BillsList {
     }
 
     @Override
-    public Map<Bill, Queue<Bill>> getMap() {
-        return Map.copyOf(billListMap);
+    public Map<Bill, Integer> getCountOfBillMap() {
+        return billListMap.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, billQueueEntry -> billQueueEntry.getValue().size()));
     }
 
     @Override

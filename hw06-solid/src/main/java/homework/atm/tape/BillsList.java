@@ -17,5 +17,5 @@ public interface BillsList {
 
     int giveMinAvailableSum();
 
-    Map<Bill, Queue<Bill>> getMap();
+    Map<Bill, Integer> getCountOfBillMap();
 }

@@ -26,8 +26,9 @@ public class BillsListServiceImpl implements BillsListService {
 
     @Override
     public int getCurrentAmountOfAtm() {
-        return billsList.getMap().entrySet().stream()
-                .map(billQueueEntry -> billQueueEntry.getKey().getDenomination() * billQueueEntry.getValue().size())
+        return billsList.getCountOfBillMap().entrySet()
+                .stream()
+                .map(billQueueEntry -> billQueueEntry.getKey().getDenomination() * billQueueEntry.getValue())
                 .reduce(0, Integer::sum);
     }
 
