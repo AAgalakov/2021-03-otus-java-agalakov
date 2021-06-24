@@ -1,7 +1,7 @@
 package homework.atm.tape;
 
 import homework.atm.Bill;
-import homework.atm.service.CountOfBills;
+import homework.atm.service.BundleOfBanknotes;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,9 +39,9 @@ public class BillsListImpl implements BillsList {
     }
 
     @Override
-    public List<Bill> takeBills(CountOfBills countOfBills) {
+    public List<Bill> takeBills(BundleOfBanknotes bundleOfBanknotes) {
         LinkedList<Bill> billsToOutput = new LinkedList<>();
-        Map<Bill, Integer> collectionOfMoney = countOfBills.getBillCountOfBillMap();
+        Map<Bill, Integer> collectionOfMoney = bundleOfBanknotes.getBillCountOfBillMap();
         for (Map.Entry<Bill, Integer> billIntegerEntry : collectionOfMoney.entrySet()) {
             for (int i = 0; i < billIntegerEntry.getValue(); i++) {
                 Queue<Bill> atmBillList = billListMap.get(billIntegerEntry.getKey());

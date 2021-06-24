@@ -1,12 +1,11 @@
 package homework.atm;
 
-import homework.atm.service.CountOfBills;
+import homework.atm.service.BundleOfBanknotes;
 import homework.atm.service.BillsListService;
 import homework.atm.validation.Validator;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 
 public class AtmImpl implements Atm {
 
@@ -25,8 +24,8 @@ public class AtmImpl implements Atm {
 
     @Override
     public List<Bill> pullMoney(int amountRequestOfMoney) {
-        Optional<CountOfBills> countOfBills = billsListService.convertRequiredAmountToCountOfBill(amountRequestOfMoney);
-        CountOfBills count = countOfBills.orElse(new CountOfBills());
+        Optional<BundleOfBanknotes> bundleOfBanknotes = billsListService.convertRequiredAmountToCountOfBill(amountRequestOfMoney);
+        BundleOfBanknotes count = bundleOfBanknotes.orElse(new BundleOfBanknotes());
         validator.validate(amountRequestOfMoney, billsListService, count);
         return billsListService.takeBills(count);
     }

@@ -5,7 +5,7 @@ import homework.atm.Bill;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CountOfBills {
+public class BundleOfBanknotes {
 
     private final Map<Bill, Integer> billCountOfBillMap = new HashMap<>();
 

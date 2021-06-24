@@ -33,18 +33,18 @@ public class BillsListServiceImpl implements BillsListService {
     }
 
     @Override
-    public Optional<CountOfBills> convertRequiredAmountToCountOfBill(int requestedAmountOfMoney) {
-        CountOfBills countOfBills = new CountOfBills();
+    public Optional<BundleOfBanknotes> convertRequiredAmountToCountOfBill(int requestedAmountOfMoney) {
+        BundleOfBanknotes bundleOfBanknotes = new BundleOfBanknotes();
         Bill[] bills = Bill.values();
         for (Bill bill : bills) {
             int denomination = bill.getDenomination();
             int requestCountOfBill = requestedAmountOfMoney / denomination;
             int currentCountOfBill = billsList.giveCountOfBills(bill);
             if (requestCountOfBill > currentCountOfBill) {
-                countOfBills.addCountOfBill(bill, currentCountOfBill);
+                bundleOfBanknotes.addCountOfBill(bill, currentCountOfBill);
                 requestedAmountOfMoney -= denomination * currentCountOfBill;
             } else {
-                countOfBills.addCountOfBill(bill, requestCountOfBill);
+                bundleOfBanknotes.addCountOfBill(bill, requestCountOfBill);
                 requestedAmountOfMoney -= requestCountOfBill * denomination;
             }
             if (requestedAmountOfMoney == 0) {
@@ -52,11 +52,11 @@ public class BillsListServiceImpl implements BillsListService {
             }
         }
 
-        return requestedAmountOfMoney == 0 ? Optional.of(countOfBills) : Optional.empty();
+        return requestedAmountOfMoney == 0 ? Optional.of(bundleOfBanknotes) : Optional.empty();
     }
 
     @Override
-    public List<Bill> takeBills(CountOfBills countOfBills) {
-        return billsList.takeBills(countOfBills);
+    public List<Bill> takeBills(BundleOfBanknotes bundleOfBanknotes) {
+        return billsList.takeBills(bundleOfBanknotes);
     }
 }

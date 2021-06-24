@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BillsListService {
 
-    Optional<CountOfBills> convertRequiredAmountToCountOfBill(int requiredAmount);
+    Optional<BundleOfBanknotes> convertRequiredAmountToCountOfBill(int requiredAmount);
 
     int putBills(List<Bill> billList);
 
@@ -15,5 +15,5 @@ public interface BillsListService {
 
     int giveMinAvailableSum();
 
-    List<Bill> takeBills(CountOfBills countOfBills);
+    List<Bill> takeBills(BundleOfBanknotes bundleOfBanknotes);
 }

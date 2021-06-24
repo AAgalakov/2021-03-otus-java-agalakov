@@ -1,17 +1,16 @@
 package homework.atm.tape;
 
 import homework.atm.Bill;
-import homework.atm.service.CountOfBills;
+import homework.atm.service.BundleOfBanknotes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 public interface BillsList {
 
     int putBills(List<Bill> billList);
 
-    List<Bill> takeBills(CountOfBills countOfBills);
+    List<Bill> takeBills(BundleOfBanknotes bundleOfBanknotes);
 
     int giveCountOfBills(Bill bill);
 
