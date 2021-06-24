@@ -1,7 +1,10 @@
 package homework.atm.validation;
 
-import homework.atm.service.CountOfBills;
+import homework.atm.Bill;
 import homework.atm.service.BillsListService;
+import homework.atm.service.CountOfBills;
+
+import java.util.Map;
 
 public class ValidatorImpl implements Validator {
 
@@ -18,11 +21,11 @@ public class ValidatorImpl implements Validator {
         minAvailableSumCheck(requestedAmountOfMoney, minAvailableSum);
         requestOfMoneyIsInMinSumCheck(requestedAmountOfMoney, minAvailableSum);
         haveEnoughMoneyCheck(requestedAmountOfMoney, currentAmountOfMoney);
-        countOfBillIsValidCheck(countOfBills);
+        countOfBillIsValidCheck(countOfBills.getBillCountOfBillMap());
     }
 
-    private void countOfBillIsValidCheck(CountOfBills countOfBills) {
-        if (countOfBills == null) {
+    private void countOfBillIsValidCheck(Map<Bill, Integer> countOfBillsMap) {
+        if (countOfBillsMap.isEmpty()) {
             throw new IllegalArgumentException(NOT_ENOUGH_COUNT_OF_BILL);
         }
     }

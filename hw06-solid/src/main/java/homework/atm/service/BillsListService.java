@@ -3,13 +3,13 @@ package homework.atm.service;
 import homework.atm.Bill;
 
 import java.util.List;
-import java.util.Queue;
+import java.util.Optional;
 
 public interface BillsListService {
 
-    CountOfBills convertRequiredAmountToCountOfBill(int requiredAmount);
+    Optional<CountOfBills> convertRequiredAmountToCountOfBill(int requiredAmount);
 
-    int putBills(Queue<Bill> billList);
+    int putBills(List<Bill> billList);
 
     int getCurrentAmountOfAtm();
 

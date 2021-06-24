@@ -4,7 +4,7 @@ import homework.atm.Bill;
 import homework.atm.tape.BillsList;
 
 import java.util.List;
-import java.util.Queue;
+import java.util.Optional;
 
 public class BillsListServiceImpl implements BillsListService {
 
@@ -15,7 +15,7 @@ public class BillsListServiceImpl implements BillsListService {
     }
 
     @Override
-    public int putBills(Queue<Bill> billList) {
+    public int putBills(List<Bill> billList) {
         return billsList.putBills(billList);
     }
 
@@ -33,7 +33,7 @@ public class BillsListServiceImpl implements BillsListService {
     }
 
     @Override
-    public CountOfBills convertRequiredAmountToCountOfBill(int requestedAmountOfMoney) {
+    public Optional<CountOfBills> convertRequiredAmountToCountOfBill(int requestedAmountOfMoney) {
         CountOfBills countOfBills = new CountOfBills();
         Bill[] bills = Bill.values();
         for (Bill bill : bills) {
@@ -52,7 +52,7 @@ public class BillsListServiceImpl implements BillsListService {
             }
         }
 
-        return requestedAmountOfMoney == 0 ? countOfBills : null;
+        return requestedAmountOfMoney == 0 ? Optional.of(countOfBills) : Optional.empty();
     }
 
     @Override

@@ -10,7 +10,7 @@ public class BillsListImpl implements BillsList {
 
     private final Map<Bill, Queue<Bill>> billListMap;
 
-    {
+    public BillsListImpl(){
         billListMap = new HashMap<>();
         Bill[] values = Bill.values();
         for (Bill bill : values) {
@@ -29,13 +29,13 @@ public class BillsListImpl implements BillsList {
     }
 
     @Override
-    public int putBills(Queue<Bill> billList) {
-        return billList.stream()
-                .map(bill -> {
-                    billListMap.get(bill).add(bill);
-                    return bill.getDenomination();
-                })
-                .reduce(0, Integer::sum);
+    public int putBills(List<Bill> billList) {
+        int sum = 0;
+        for (Bill bill : billList) {
+            billListMap.get(bill).add(bill);
+            sum += bill.getDenomination();
+        }
+        return sum;
     }
 
     @Override

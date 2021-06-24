@@ -9,7 +9,7 @@ import java.util.Queue;
 
 public interface BillsList {
 
-    int putBills(Queue<Bill> billList);
+    int putBills(List<Bill> billList);
 
     List<Bill> takeBills(CountOfBills countOfBills);
 
