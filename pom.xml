@@ -24,6 +24,7 @@
         <module>hw05-byteCodes</module>
         <module>hw06-solid</module>
         <module>hw07-patterns</module>
+        <module>hw08-io</module>
     </modules>
 
     <dependencyManagement>
@@ -32,6 +33,21 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>19.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.12.3</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.json</groupId>
+                <artifactId>javax.json-api</artifactId>
+                <version>1.1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.json</artifactId>
+                <version>1.1.4</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
