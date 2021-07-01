@@ -22,6 +22,7 @@
         <module>hw03-annotations</module>
         <module>hw04-gc</module>
         <module>hw05-byteCodes</module>
+        <module>hw06-solid</module>
     </modules>
 
     <dependencyManagement>
