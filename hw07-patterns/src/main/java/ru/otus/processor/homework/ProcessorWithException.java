@@ -6,6 +6,7 @@ import ru.otus.processor.Processor;
 import java.time.LocalDateTime;
 
 public class ProcessorWithException implements Processor {
+
     @Override
     public Message process(Message message) {
         if (LocalDateTime.now().getSecond() % 2 == 0){
