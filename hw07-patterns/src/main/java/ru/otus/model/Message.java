@@ -1,8 +1,6 @@
 package ru.otus.model;
 
-import java.nio.charset.StandardCharsets;
-
-public class Message {
+public final class Message implements Cloneable{
     private final long id;
     private final String field1;
     private final String field2;
@@ -131,6 +129,25 @@ public class Message {
                 ", field12='" + field12 + '\'' +
                 ", field13='" + field13 + '\'' +
                 '}';
+    }
+
+    @Override
+    public Message clone () throws CloneNotSupportedException {
+        return toBuilder()
+                .field1(this.field1)
+                .field2(this.field2)
+                .field3(this.field3)
+                .field4(this.field4)
+                .field5(this.field5)
+                .field6(this.field6)
+                .field7(this.field7)
+                .field8(this.field8)
+                .field9(this.field9)
+                .field10(this.field10)
+                .field11(this.field11)
+                .field12(this.field12)
+                .field13(this.field13.toClone())
+                .build();
     }
 
     public static class Builder {
