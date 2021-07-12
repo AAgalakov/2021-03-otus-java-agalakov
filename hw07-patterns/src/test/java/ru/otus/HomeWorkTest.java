@@ -16,10 +16,10 @@ class HomeWorkTest {
     @DisplayName("Проверка выбрасывания исключения в чётную секунду")
     void failTest() {
         //given
-        var message = new Message.Builder(1L).field1("field1").build();
+        final var message = new Message.Builder(1L).field1("field1").build();
 
         //when
-        var processorWithException = new ProcessorWithException(LocalDateTime.now().withSecond(2));
+        final var processorWithException = new ProcessorWithException(() -> LocalDateTime.now().withSecond(2));
 
         //then
         assertThatExceptionOfType(TimeException.class).isThrownBy(() -> processorWithException.process(message));

@@ -7,15 +7,15 @@ import java.time.LocalDateTime;
 
 public class ProcessorWithException implements Processor {
 
-    private final LocalDateTime localDateTime;
+    private final DateTimeProvider dateTimeProvider;
 
-    public ProcessorWithException(final LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public ProcessorWithException(final DateTimeProvider dateTimeProvider) {
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     @Override
     public Message process(final Message message) {
-        if (localDateTime.getSecond() % 2 == 0){
+        if (dateTimeProvider.getLocalDateTime().getSecond() % 2 == 0){
             throw new TimeException("Секунда чётная");
         }
         return message;

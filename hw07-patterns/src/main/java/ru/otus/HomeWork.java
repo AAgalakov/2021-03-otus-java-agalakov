@@ -25,7 +25,7 @@ public class HomeWork {
     public static void main(String[] args) {
         var processors = List.of(
                 new ProcessorChangeFields11And12(),
-                new ProcessorWithException(LocalDateTime.now()));
+                new ProcessorWithException(LocalDateTime::now));
 
         var complexProcessor = new ComplexProcessor(processors, ex -> {
         });
