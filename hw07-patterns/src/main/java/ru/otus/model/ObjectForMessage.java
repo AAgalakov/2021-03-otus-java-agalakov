@@ -14,7 +14,7 @@ public class ObjectForMessage implements Cloneable{
     }
 
     public ObjectForMessage toClone(){
-        ObjectForMessage objectForMessage = new ObjectForMessage();
+        var objectForMessage = new ObjectForMessage();
         objectForMessage.setData(List.copyOf(this.getData()));
         return objectForMessage;
     }

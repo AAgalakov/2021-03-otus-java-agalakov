@@ -95,20 +95,6 @@ class ComplexProcessorTest {
         verify(listener, times(1)).onUpdated(message);
     }
 
-    @Test
-    @DisplayName("Проверка выбрасывания исключения в чётную секунду")
-    void failTest(){
-        //given
-        Message message = new Message.Builder(1L).field1("field1").build();
-        ProcessorWithException processorWithException = new ProcessorWithException();
-
-        //when
-        if (LocalDateTime.now().getSecond() % 2 == 0){
-            //then
-            assertThatExceptionOfType(TimeException.class).isThrownBy(() -> processorWithException.process(message));
-        }
-    }
-
     private static class TestException extends RuntimeException {
         public TestException(String message) {
             super(message);
