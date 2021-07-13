@@ -15,3 +15,5 @@
 [Ссылка на пятое задание - hw05-byteCodes](hw05-byteCodes/README.md "Ссылка на занятие №5")
 
 [Ссылка на шестое задание - hw06-solid](hw06-solid/README.md "Ссылка на занятие №6")
+
+[Ссылка на седьмое задание - hw07-patterns](hw07-patterns/README.md "Ссылка на занятие №7")
