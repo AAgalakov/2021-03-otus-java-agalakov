@@ -19,7 +19,8 @@ class HomeWorkTest {
         final var message = new Message.Builder(1L).field1("field1").build();
 
         //when
-        final var processorWithException = new ProcessorWithException(() -> LocalDateTime.now().withSecond(2));
+        final var processorWithException = new ProcessorWithException(() -> LocalDateTime
+        .of(2021, 1, 1, 0, 0, 2));
 
         //then
         assertThatExceptionOfType(TimeException.class).isThrownBy(() -> processorWithException.process(message));
