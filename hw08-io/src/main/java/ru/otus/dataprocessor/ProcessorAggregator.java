@@ -2,9 +2,9 @@ package ru.otus.dataprocessor;
 
 import ru.otus.model.Measurement;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class ProcessorAggregator implements Processor {
@@ -12,7 +12,11 @@ public class ProcessorAggregator implements Processor {
     @Override
     public Map<String, Double> process(List<Measurement> data) {
         return data.stream()
-                .sorted(Comparator.comparing(Measurement::getName))
-                .collect(Collectors.groupingBy(Measurement::getName, Collectors.summingDouble(Measurement::getValue)));
+                   .collect(Collectors.toMap(
+                           Measurement::getName,
+                           Measurement::getValue,
+                           Double::sum,
+                           TreeMap::new
+                   ));
     }
 }
