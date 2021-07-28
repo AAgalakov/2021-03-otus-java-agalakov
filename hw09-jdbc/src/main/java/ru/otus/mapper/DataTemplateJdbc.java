@@ -77,11 +77,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
 
     @Override
     public long insert(Connection connection, T client) {
-        if (currentMaxNumberOfId == 0) {
-            currentMaxNumberOfId = getCurrentMaxNumberOfId(connection);
-        }
         final List<Object> list = getListObjects(client);
-        currentMaxNumberOfId++;
 
         return dbExecutor.executeStatement(
                 connection,
@@ -138,23 +134,39 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
     }
 
     private long getCurrentMaxNumberOfId(Connection connection) {
-        final List<T> all = findAll(connection);
-        if (all.isEmpty()) {
-            return 1L;
-        }
-        long aLong = 0;
-        for (T t : all) {
-            final Field idField = entityClassMetaData.getIdField();
-            try {
-                aLong = (Long) idField.get(t);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            if (aLong > currentMaxNumberOfId) {
-                currentMaxNumberOfId = aLong;
-            }
-        }
-        return currentMaxNumberOfId;
+        final Optional<Long> resultSet1 = dbExecutor.executeSelect(
+                connection,
+                entitySQLMetaData.getMaxId(), Collections.emptyList(),
+                resultSet -> {
+                    try {
+                        if (resultSet.next()) {
+                            return Long.parseLong(resultSet.getString(1));
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    return null;
+                }
+        );
+
+        return resultSet1.orElse(0L);
+//        final List<T> all = findAll(connection);
+//        if (all.isEmpty()) {
+//            return 1L;
+//        }
+//        long aLong = 0;
+//        for (T t : all) {
+//            final Field idField = entityClassMetaData.getIdField();
+//            try {
+//                aLong = (Long) idField.get(t);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//            if (aLong > currentMaxNumberOfId) {
+//                currentMaxNumberOfId = aLong;
+//            }
+//        }
+//        return currentMaxNumberOfId;
     }
 
     private List<Object> getListObjects(T client) {

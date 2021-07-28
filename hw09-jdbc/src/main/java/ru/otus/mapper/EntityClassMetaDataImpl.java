@@ -15,11 +15,15 @@ public class EntityClassMetaDataImpl implements EntityClassMetaData {
     private final Field fieldId;
     private final List<Field> fieldList;
     private final List<Field> fieldsWithoutId;
+    private final Constructor constructor;
 
-    public EntityClassMetaDataImpl(final Class<?> clazz) {
+    public EntityClassMetaDataImpl(final Class<?> clazz) throws NoSuchMethodException {
         this.clazz = clazz;
         this.fieldList = Arrays.stream(clazz.getDeclaredFields())
-                               .peek(field -> field.setAccessible(true))
+                               .map(field -> {
+                                   field.setAccessible(true);
+                                   return field;
+                               })
                                .collect(Collectors.toList());
         fieldId = fieldList
                 .stream()
@@ -32,6 +36,7 @@ public class EntityClassMetaDataImpl implements EntityClassMetaData {
                 .stream()
                 .filter(field -> !field.equals(fieldId))
                 .collect(Collectors.toList());
+        constructor = clazz.getConstructor();;
     }
 
     @Override
@@ -40,13 +45,7 @@ public class EntityClassMetaDataImpl implements EntityClassMetaData {
     }
 
     @Override
-    public <T> Constructor<T> getConstructor() {
-        Constructor constructor = null;
-        try {
-            constructor = clazz.getConstructor();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+    public <T> Constructor getConstructor() {
         return constructor;
     }
 
